@@ -4,7 +4,41 @@
     <meta charset="utf-8" />
     <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
     <script src="https://unpkg.com/downloadjs@1.4.7"></script>
-    <link rel="stylesheet" href="stl.css">
+    <style>
+	    #myForm {
+		font-size: 40px;
+	}
+	
+	#myForm > select, #myForm > input {
+		font-size: 40px;
+	}
+	
+	#box {
+		display: flex;
+		/*width: 1000px;
+		border: 1px solid black;*/
+	}
+	
+	#box > select {
+		border: none;
+		height: 50px;
+		margin-top: 40px;
+		font-size: 40px;
+	}
+	
+	.toMargin20 {
+		margin-left: 100px;
+	}
+	
+	input {
+		font-size: 40px;
+		padding: 0;
+	}
+	
+	#subjectSelected, #divForSchool, #divForRegOtdel, #divForStudent, #divForTeacher{
+		display: none;
+	}
+    </style>
   </head>
 
   <body>
