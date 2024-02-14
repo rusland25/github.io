@@ -1,17 +1,151 @@
-<!DOCTYPE html>
 <html>
+  <head>
+  	<title>New</title>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
+    <script src="https://unpkg.com/downloadjs@1.4.7"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
 
-<head>
-	<title></title>
-	<link rel="stylesheet" type="text/css" href="stl.css">
-</head>
+  <body>
+    <h1>Wellcome</h1>
 
-<body>
-	<div class="main">
-		<div class="bx1"></div>
-		<div class="bx3"></div>
-		<div class="bx3"></div>
-	</div>
+    <form action="" id="myForm">
+    	<p>Выбирите тип организации</p>
+    	<select name="" id="selcetOrg" style="width: 800px;" required onchange = "newF()">
+    		<option disabled selected value="def">Какая вы организация</option>
+    		<option value="school">Школа</option>
+    		<option value="regOtdel">Районный отдел образования</option>
+    		<option value="teacher">Учитель</option>
+    		<option value="student">Ученик</option>
+    	</select>
+    	
 
-</body>
+    	<div id="divForSchool">
+    		<p>Вам доступна только услуга онлайн марафон</p>    	
+    		<p>Введите официальное название вашей школы</p>	
+    		<input type="text" required>
+    		<div id="box">
+    			<select name="" id="subjectSelect" style="width: 400px;">
+    				<option disabled selected value="def">Выбирите предмет</option>
+    				<option value="phys">Физика</option>
+    				<option value="chem">Химия</option>
+    				<option value="bio">Биология</option>
+    				<option value="math">Математика</option>
+    			</select>
+    			<p style="margin-left: 35px;">Введите количество учеников</p>
+    			<input type="text" name="" id="" required pattern="\d{1}|\d{2}|\d{3}">
+    		</div>
+    		<input type="submit" value="Получить коммерческое предложение">
+    		<p id="subjectSelected">Вы не выбрали предмет</p>
+    	</div>
+
+    	<div id="divForRegOtdel">
+			<p>Regional Otdel</p>    		
+    	</div>
+
+    	<div id="divForStudent">
+			<p>Student</p>    		
+    	</div>
+
+    	<div id="divForTeacher">
+			<p>Teacher</p>    		
+    	</div>
+
+    </form>
+    
+  </body>
+
+  <script>
+    const { PDFDocument, StandardFonts, rgb } = PDFLib
+    const newFrom = document.getElementById("myForm");
+    const selectOrg = document.getElementById("selcetOrg");
+    
+    function newF(){
+    	if(selectOrg.value == "school"){
+    		document.getElementById("divForSchool").style.display = "block";
+    		document.getElementById("divForRegOtdel").style.display = "none";
+    		document.getElementById("divForStudent").style.display = "none";
+    		document.getElementById("divForTeacher").style.display = "none";
+    	}
+    	else if(selectOrg.value == "regOtdel"){
+    		document.getElementById("divForSchool").style.display = "none";
+    		document.getElementById("divForRegOtdel").style.display = "block";
+    		document.getElementById("divForStudent").style.display = "none";
+    		document.getElementById("divForTeacher").style.display = "none";
+    	}
+    	else if(selectOrg.value == "teacher"){
+    		document.getElementById("divForSchool").style.display = "none";
+    		document.getElementById("divForRegOtdel").style.display = "none";
+    		document.getElementById("divForStudent").style.display = "block";
+    		document.getElementById("divForTeacher").style.display = "none";
+    	}
+    	if(selectOrg.value == "student"){
+    		document.getElementById("divForSchool").style.display = "none";
+    		document.getElementById("divForRegOtdel").style.display = "none";
+    		document.getElementById("divForStudent").style.display = "none";
+    		document.getElementById("divForTeacher").style.display = "block";
+    	}
+    }
+    
+
+    
+
+    //selectOrg.addEventListener('click', alertt);
+    async function createPdf(event) {
+    	event.preventDefault();
+    	if(selectOrg.value == "school"){
+    		if(document.getElementById("subjectSelect").value == "def"){
+	    		document.getElementById("subjectSelected").style.display = "block";
+	    		return;
+	    	}
+	    	else{
+	    		document.getElementById("subjectSelected").style.display = "none";
+	    	}
+
+	    	let schoolName = newFrom[1].value;
+	    	let subjectName = newFrom[2].value;
+	    	let countStudents = newFrom[3].value;
+
+	    	const pdfDoc = await PDFDocument.create();
+	    	const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+	    	const page = pdfDoc.addPage();
+	    	const { width, height } = page.getSize();
+	    	const fontSize = 30;
+
+	    	page.drawText(schoolName, {
+		        x: 50,
+		        y: height - 4 * fontSize,
+		        size: fontSize,
+		        font: timesRomanFont,
+		        color: rgb(0, 0.53, 0.71),
+	      	});
+
+	      	page.drawText(subjectName, {
+		        x: 50,
+		        y: height - 8 * fontSize,
+		        size: fontSize,
+		        font: timesRomanFont,
+		        color: rgb(0, 0.53, 0.71),
+	      	});
+
+	      	page.drawText(countStudents, {
+		        x: 50,
+		        y: height - 12 * fontSize,
+		        size: fontSize,
+		        font: timesRomanFont,
+		        color: rgb(0, 0.53, 0.71),
+	      	});
+
+
+	    	const pdfBytes = await pdfDoc.save();
+	    	download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");
+    	}
+
+
+      	
+    }
+
+    newFrom.addEventListener('submit', createPdf);
+  </script>
 </html>
